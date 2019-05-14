@@ -1,18 +1,8 @@
-﻿using System;
+﻿using Microsoft.Win32;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Microsoft.Win32;
 
 namespace Filmobus_test
 {
@@ -71,10 +61,12 @@ namespace Filmobus_test
 
         private void SaveSettings_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new SaveFileDialog();
-            dialog.FileName = "settingsData";
-            dialog.Title = "Save settings data";
-            dialog.Filter = "Settings data|*.sd";
+            var dialog = new SaveFileDialog
+            {
+                FileName = "settingsData",
+                Title = "Save settings data",
+                Filter = "Settings data|*.sd"
+            };
             var isChoosen = dialog.ShowDialog();
             if (isChoosen != null && isChoosen.Value)
             {
@@ -88,16 +80,18 @@ namespace Filmobus_test
 
         private void LoadSettings_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new OpenFileDialog();
-            dialog.Title = "Load settings data";
-            dialog.Filter = "Settings data|*.sd";
+            var dialog = new OpenFileDialog
+            {
+                Title = "Load settings data",
+                Filter = "Settings data|*.sd"
+            };
             var isChoosen = dialog.ShowDialog();
             if (isChoosen != null && isChoosen.Value)
             {
                 using (var stream = dialog.OpenFile())
                 {
                     var formatter = new BinaryFormatter();
-                    _settings = (Dictionary<string, string>) formatter.Deserialize(stream);
+                    _settings = (Dictionary<string, string>)formatter.Deserialize(stream);
                 }
             }
         }
