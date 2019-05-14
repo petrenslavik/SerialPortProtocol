@@ -4,9 +4,131 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Filmobus_test"
+        xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="720" Width="1080" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100px"/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="760px"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="PortSettingsGrid" Grid.Row="0" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100px"/>
+                <ColumnDefinition Width="100px"/>
+                <ColumnDefinition Width="100px"/>
+                <ColumnDefinition Width="100px"/>
+                <ColumnDefinition Width="100px"/>
+                <ColumnDefinition Width="100px"/>
+                <ColumnDefinition Width="100px"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50px"/>
+                <RowDefinition Height="50px"/>
+            </Grid.RowDefinitions>
+            <Label x:Name="PortChooserLabel" Grid.Column="0" Grid.Row="0"  HorizontalAlignment="Center" VerticalAlignment="Center">Port:</Label>
+            <Label x:Name="BaudRateChooserLabel" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Baud rate:</Label>
+            <Label x:Name="ParityChooserLabel" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Parity:</Label>
+            <Label x:Name="DataBitsChooserLabel" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Byte size:</Label>
+            <Label x:Name="StopBitsChooserLabel" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Stop bits:</Label>
+            <ComboBox x:Name="PortChooserBox" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" ItemsSource="{Binding AvaiablePorts}"/>
+            <ComboBox x:Name="BaudRateChooserBox" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" />
+            <ComboBox x:Name="ParityChooserBox" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" />
+            <ComboBox x:Name="DataBitsChooserBox" Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" />
+            <ComboBox x:Name="StopBitsChooserBox" Grid.Column="5" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" />
+            <Button x:Name="OpenPortButton" Grid.Column="4" Grid.Row="1" Content="Open port" Width="70" Height="25" Click="OpenPortButton_Click"/>
+            <Button x:Name="ClosePortButton" Grid.Column="5" Grid.Row="1" Content="Close port" Width="70" Height="25" Click="ClosePortButton_Click"/>
+            <Button x:Name="OpenPlotButton" Grid.Column="6" Grid.Row="1" Content="Open plot" Width="70" Height="25" Click="OpenPlotButton_Click"/>
+        </Grid>
+        <Grid x:Name="DeskDataGrid" Grid.Row="1" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="DirectionLabel" Grid.Column="0" Grid.Row="0"  HorizontalAlignment="Center" VerticalAlignment="Center">Direction:</Label>
+            <Label x:Name="AskLabel" Grid.Column="2" Grid.Row="0"  HorizontalAlignment="Center" VerticalAlignment="Center">Ask:</Label>
+            <Label x:Name="SettingsRequestLabel" Grid.Column="0" Grid.Row="1"  HorizontalAlignment="Center" VerticalAlignment="Center">Settings request:</Label>
+            <Label x:Name="PacketTypeLabel" Grid.Column="2" Grid.Row="1"  HorizontalAlignment="Center" VerticalAlignment="Center">Packet type:</Label>
+            <Label x:Name="FlagsArrayLabel" Grid.Column="0" Grid.Row="2"  HorizontalAlignment="Center" VerticalAlignment="Center">Flags array:</Label>
+            <Label x:Name="DataArrayLabel" Grid.Column="0" Grid.Row="3"  HorizontalAlignment="Center" VerticalAlignment="Top">Build on the plot:</Label>
+            <Label x:Name="CheckBoxArrayLabel" Grid.Column="0" Grid.Row="3"  HorizontalAlignment="Center" VerticalAlignment="Bottom">Data array:</Label>
+            <Label x:Name="SettingsNumLabel" Grid.Column="0" Grid.Row="4"  HorizontalAlignment="Center" VerticalAlignment="Center">Settings num:</Label>
+            <TextBox x:Name="DirectionTextBox" Text="{Binding CurrentDeskPacket.Direction, Mode=OneWay}" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="100"/>
+            <TextBox x:Name="AskTextBox" Text="{Binding CurrentDeskPacket.Ask, Mode=OneWay}" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="100"/>
+            <TextBox x:Name="SettingsRequestTextBox" Text="{Binding CurrentDeskPacket.SettingsRequest, Mode=OneWay}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="100"/>
+            <TextBox x:Name="PacketTypeTextBox" Text="{Binding CurrentDeskPacket.PacketType, Mode=OneWay}" Grid.Column="3" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="100"/>
+            <TextBox x:Name="FlagsArrayTextBox" Text="{Binding CurrentDeskPacket.FlagsArray, Mode=OneWay}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="280"/>
+            <TextBox x:Name="SettingsNumTextBox" Text="{Binding CurrentDeskPacket.Settings2, Mode=OneWay}" Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="280"/>
+            <TextBox x:Name="SettingsNum1TextBox" Text="{Binding CurrentDeskPacket.Settings, Mode=OneWay}" Grid.Column="1" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="100"/>
+            <Button x:Name="ShowSettingsButton" Grid.Column="2" Grid.Row="5" Content="Show settings" Width="80" Height="25" Click="ShowSettingsButton_Click"/>
+            <Button x:Name="ClearButton" Grid.Column="3" Grid.Row="5" Content="Clear" Width="80" Height="25" Click="ClearButton_Click"/>
+            <TextBox x:Name="packet" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" Height="23"></TextBox>
+        </Grid>
+        <Grid x:Name="RtuDataGrid" Grid.Row="2" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="RtuDirectionLabel"  Grid.Column="0" Grid.Row="0"  HorizontalAlignment="Center" VerticalAlignment="Center">Direction:</Label>
+            <Label x:Name="RtuStatusLabel" Grid.Column="2" Grid.Row="0"  HorizontalAlignment="Center" VerticalAlignment="Center">Status:</Label>
+            <Label x:Name="RtuFuncAdressLabel" Grid.Column="0" Grid.Row="1"  HorizontalAlignment="Center" VerticalAlignment="Center">Func address:</Label>
+            <Label x:Name="RtuFlagsArrayLabel" Grid.Column="0" Grid.Row="2"  HorizontalAlignment="Center" VerticalAlignment="Center">Flags array:</Label>
+            <Label x:Name="RtuDataArrayLabel" Grid.Column="0" Grid.Row="3"  HorizontalAlignment="Center" VerticalAlignment="Top">Build on the plot:</Label>
+            <Label x:Name="RtuCheckBoxArrayLabel" Grid.Column="0" Grid.Row="3"  HorizontalAlignment="Center" VerticalAlignment="Bottom">Data array:</Label>
+            <Label x:Name="RtuSettingsNumLabel" Grid.Column="0" Grid.Row="4"  HorizontalAlignment="Center" VerticalAlignment="Center">Settings num:</Label>
+            <TextBox x:Name="RtuDirectionTextBox" Text="{Binding CurrentRtuPacket.Direction, Mode=OneWay}" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="100"/>
+            <TextBox x:Name="RtuStatusTextBox" Text="{Binding CurrentRtuPacket.RtuStatus, Mode=OneWay}" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="100"/>
+            <TextBox x:Name="RtuFuncAddressTextBox" Text="{Binding CurrentRtuPacket.RtuFuncAddress, Mode=OneWay}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="100"/>
+            <TextBox x:Name="RtuFlagsArrayTextBox" Text="{Binding CurrentRtuPacket.FlagsArray, Mode=OneWay}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="280"/>
+            <TextBox x:Name="RtuSettingsNumTextBox" Text="{Binding CurrentRtuPacket.Settings2, Mode=OneWay}" Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="280"/>
+            <TextBox x:Name="RtuSettingsNum1TextBox" Text="{Binding CurrentRtuPacket.Settings, Mode=OneWay}" Grid.Column="1" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="100"/>
+            <Button x:Name="RtuShowSettingsButton" Grid.Column="2" Grid.Row="5" Content="Show settings" Width="80" Height="25" Click="RtuShowSettingsButton_Click"/>
+            <Button x:Name="RtuClearButton" Grid.Column="3" Grid.Row="5" Content="Clear" Width="80" Height="25" Click="RtuClearButton_Click"/>
+        </Grid>
+        <!--<Grid x:Name="CrcDataGrid" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="CrcCalculatorLabel" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">CRC Calculator:</Label>
+            <TextBox x:Name="ATextBox" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="60"/>
+            <TextBox x:Name="CrcHTextBox" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="60"/>
+            <TextBox x:Name="CrcLTextBox" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="60"/>
+            <Button x:Name="ResetTextBox" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Height="23" Width="60" Content="Clear" Margin="0,0,105,0"/>
+            <Button x:Name="CalculateTextBox" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Height="23" Width="60" Content="Calculate" Margin="105,0,0,0"/>
+        </Grid>-->
     </Grid>
 </Window>
