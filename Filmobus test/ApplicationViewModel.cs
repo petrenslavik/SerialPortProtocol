@@ -15,14 +15,28 @@ namespace Filmobus_test
 
         private Packet _deskPacket;
         private Packet _rtuPacket;
+        private string _exception;
 
+        public Packet LastPacket { get; private set; }
+
+        public string SerialPortException
+        {
+            get => _exception;
+            set
+            {
+                _exception = value;
+                OnPropertyChanged();
+            }
+        }
         public Packet CurrentDeskPacket
         {
             get => _deskPacket;
             set
             {
                 _deskPacket = value;
+                LastPacket = value;
                 OnPropertyChanged();
+                OnPropertyChanged("LastPacket");
             }
         }
 
@@ -32,7 +46,9 @@ namespace Filmobus_test
             set
             {
                 _rtuPacket = value;
+                LastPacket = value;
                 OnPropertyChanged();
+                OnPropertyChanged("LastPacket");
             }
         }
 

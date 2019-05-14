@@ -28,10 +28,6 @@ namespace Filmobus_test
         public SettingsWindow()
         {
             InitializeComponent();
-        }
-
-        private void SettingsWindow_OnLoaded(object sender, RoutedEventArgs e)
-        {
             _settingsGroupTextBoxes = new List<TextBox>();
             _settingsTextBoxes = new List<TextBox>();
         }
@@ -47,7 +43,7 @@ namespace Filmobus_test
                     Text = pair.Key,
                     VerticalAlignment = VerticalAlignment.Top,
                     HorizontalAlignment = HorizontalAlignment.Left,
-                    Margin = new Thickness(10, count * 10 + 10, 0, 0),
+                    Margin = new Thickness(10, count * 23 + 10, 0, 0),
                     Width = 100,
                     Height = 23
                 };
@@ -57,7 +53,7 @@ namespace Filmobus_test
                     Text = pair.Value,
                     VerticalAlignment = VerticalAlignment.Top,
                     HorizontalAlignment = HorizontalAlignment.Left,
-                    Margin = new Thickness(100 + 10 + 10, count * 10 + 10, 0, 0),
+                    Margin = new Thickness(100 + 10 + 10, count * 23 + 10, 0, 0),
                     Width = 280,
                     Height = 23
                 };
@@ -104,8 +100,6 @@ namespace Filmobus_test
                     _settings = (Dictionary<string, string>) formatter.Deserialize(stream);
                 }
             }
-
-
         }
     }
 }

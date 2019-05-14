@@ -1,13 +1,9 @@
-﻿using OxyPlot;
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 using System.IO.Ports;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,30 +17,18 @@ namespace Filmobus_test
     /// </summary>
     public partial class MainWindow : Window
     {
-        //public List<int> Data;
-        public List<string> AvaiablePorts;
         public List<TextBox> DeskDataBoxes;
         public List<TextBox> RtuDataBoxes;
         public List<CheckBox> DeskDataCheckBoxes;
         public List<CheckBox> RtuDataCheckBoxes;
-
-        private delegate void AnalyzaDel(byte[] data);
 
         private ApplicationViewModel _model;
         private Dictionary<string, string> DeskSettings;
         private Dictionary<string, string> RtuSettings;
         private PlotWindow _plotWindow;
         private SerialPort _port;
-        private bool _readSize;
-        private bool _readPacket;
-        private int _packetSize;
-        private int _currentPacketSize;
-        private PlotModel _plot;
-        private Thread _readThread;
-        private bool _stopThread;
         private List<byte> _cache;
         private bool _isCleared;
-        private Timer timer;
 
         public MainWindow()
         {
@@ -80,7 +64,6 @@ namespace Filmobus_test
                     Margin = new Thickness(i * 36, 0, 0, 0),
                 };
 
-                //textbox.TextChanged += TextBoxChanged;
                 textbox.Tag = $"Desk {i}";
 
                 var binding = new Binding();
@@ -108,7 +91,7 @@ namespace Filmobus_test
                 {
                     VerticalAlignment = VerticalAlignment.Top,
                     HorizontalAlignment = HorizontalAlignment.Left,
-                    Margin = new Thickness(i * 35 + 8.5, 6, 0, 0)
+                    Margin = new Thickness(i * 38 + 8.5, 6, 0, 0)
                 };
 
                 var textbox = new TextBox
@@ -116,7 +99,7 @@ namespace Filmobus_test
                     VerticalAlignment = VerticalAlignment.Bottom,
                     HorizontalAlignment = HorizontalAlignment.Left,
                     Width = 40,
-                    Margin = new Thickness(i * 36, 0, 0, 0)
+                    Margin = new Thickness(i * 37, 0, 0, 0)
                 };
                 checkbox.Checked += CheckBoxChanged;
                 checkbox.Unchecked += CheckBoxChanged;
@@ -143,8 +126,7 @@ namespace Filmobus_test
                 RtuDataGrid.Children.Add(textbox);
             }
 
-            AvaiablePorts = SerialPort.GetPortNames().ToList();
-            PortChooserBox.ItemsSource = AvaiablePorts;
+            PortChooserBox.ItemsSource = SerialPort.GetPortNames().ToList();
             BaudRateChooserBox.ItemsSource = new List<int>()
             {
                 110,
@@ -171,8 +153,6 @@ namespace Filmobus_test
             DataBitsChooserBox.ItemsSource = new List<int> { 5, 6, 7, 8 };
             _cache = new List<byte>();
             _port = new SerialPort();
-            //var callback = new TimerCallback(ReadTempData);
-            //timer = new Timer(callback, this, Timeout.Infinite, 100);
             LoadSettings();
             _model = new ApplicationViewModel();
             this.DataContext = _model;
@@ -181,8 +161,11 @@ namespace Filmobus_test
         private void OpenPortButton_Click(object sender, RoutedEventArgs e)
         {
             if (_port.IsOpen)
+            {
                 return;
-            _port.Parity = (System.IO.Ports.Parity) ParityChooserBox.SelectedItem;
+            }
+
+            _port.Parity = (System.IO.Ports.Parity)ParityChooserBox.SelectedItem;
             _port.PortName = (string)PortChooserBox.SelectedItem;
             _port.BaudRate = (int)BaudRateChooserBox.SelectedItem;
             _port.DataBits = (int)DataBitsChooserBox.SelectedItem;
@@ -193,63 +176,18 @@ namespace Filmobus_test
             try
             {
                 _port.Open();
-                //    timer.Change(0, 50);
             }
-            finally
+            catch(Exception ex)
             {
+                (DataContext as ApplicationViewModel).SerialPortException = ex.Message;
             }
         }
 
-        private void ReadTempData(object sender,SerialDataReceivedEventArgs e)
+        private void ReadTempData(object sender, SerialDataReceivedEventArgs e)
         {
             var arr = new byte[_port.BytesToRead];
             var readed = _port.Read(arr, 0, arr.Length);
-            Debug.Print(readed.ToString());
-            string msg = string.Empty;
-            foreach (byte b in arr)
-            {
-                msg += $"{b} ";
-            }
-            //Debug.Print(msg);
             CheckPackets(arr.ToList());
-        }
-
-        private void ReadData()
-        {
-            var Data = new List<int>();
-            while (true)
-            {
-                if (_stopThread)
-                {
-                    break;
-                }
-
-                Data.Add(_port.ReadByte());
-                if (_readPacket && _currentPacketSize != 0)
-                {
-                    _currentPacketSize--;
-                }
-                else if (_readPacket && _currentPacketSize == 0)
-                {
-                   // var delegateAnalyza = new AnalyzaDel(CheckPackets);
-                   // Dispatcher.Invoke(delegateAnalyza, Data);
-                    _readPacket = false;
-                    Data = new List<int>();
-                }
-                else
-                if (_readSize)
-                {
-                    _readPacket = true;
-                    _currentPacketSize = Data[Data.Count - 1];
-                    _readSize = false;
-                }
-                else
-                if (Data.Count >= 3 && Data[Data.Count - 1] == Data[Data.Count - 2] && Data[Data.Count - 3] == Data[Data.Count - 1] &&
-                    Data[Data.Count - 1] == 255)
-                {
-                    _readSize = true;
-                }
-            }
         }
 
         private void CheckPackets(List<byte> newData)
@@ -278,6 +216,15 @@ namespace Filmobus_test
                             var val = packet.DeskArray[index];
                             _plotWindow?.AddPoint(DataFor.Desk, index, val);
                         }
+
+                        if (DeskSettings.ContainsKey(packet.Settings.ToString()))
+                        {
+                            DeskSettings[packet.Settings.ToString()] = packet.Settings2;
+                        }
+                        else
+                        {
+                            DeskSettings.Add(packet.Settings.ToString(), packet.Settings2);
+                        }
                     }
                     else
                     {
@@ -286,6 +233,15 @@ namespace Filmobus_test
                         {
                             var val = packet.RtuArray[index];
                             _plotWindow?.AddPoint(DataFor.Rtu, index, val);
+                        }
+
+                        if (RtuSettings.ContainsKey(packet.Settings.ToString()))
+                        {
+                            RtuSettings[packet.Settings.ToString()] = packet.Settings2;
+                        }
+                        else
+                        {
+                            RtuSettings.Add(packet.Settings.ToString(), packet.Settings2);
                         }
                     }
                 }
@@ -318,278 +274,134 @@ namespace Filmobus_test
             }
         }
 
-        private void Analyze(byte[] data)
+        private void ClosePortButton_Click(object sender, RoutedEventArgs e)
+        {
+            ClosePort();
+        }
+
+        private void OpenPlotButton_Click(object sender, RoutedEventArgs e)
+        {
+            _plotWindow = new PlotWindow();
+            _plotWindow.Show();
+            for (int i = 0; i < 16; i++)
             {
-                //var list = new List<byte>();
-                //foreach (var value in _cache)
-                //{
-                //    list.Add((byte)value);
-                //}
-                //list.RemoveRange(0,3);
-                //var res = CRC.CRC16(list.ToArray(), list.Count-1);
-                //if (res != 0)
-                //    return;
-                //var direction = (data[3] / 128);
-
-                //if (direction == 0)
-                //{
-                //    DirectionTextBox.Text = "0";
-                //    AskTextBox.Text = (data[4] / 128).ToString();
-
-                //    int sendSettings = data[4] & 64;
-                //    int askSettings = data[4] & 32;
-
-                //    SettingsRequestTextBox.Text = sendSettings != 0 ? $"1" : $"0";
-                //    SettingsRequestTextBox.Text += askSettings != 0 ? $" | 1" : $" | 0";
-
-                //    PacketTypeTextBox.Text = string.Empty;
-                //    for (int i = 3; i >= 0; i--)
-                //    {
-                //        var value = data[4] & (int)Math.Pow(2, i);
-                //        PacketTypeTextBox.Text += value != 0 ? $"1 | " : $"0 | ";
-                //    }
-
-                //    FlagsArrayTextBox.Text = string.Empty;
-                //    int amountOf_cache = 0;
-
-                //    for (int i = 0; i < 8; i++)
-                //    {
-                //        var t = data[5] & (int)Math.Pow(2, i);
-                //        if (t != 0)
-                //        {
-                //            amountOf_cache++;
-                //            FlagsArrayTextBox.Text += $" 1 |";
-                //        }
-                //        else
-                //        {
-                //            FlagsArrayTextBox.Text += $" 0 |";
-                //        }
-                //    }
-
-                //    for (int i = 0; i < 8; i++)
-                //    {
-                //        var t = data[6] & (int)Math.Pow(2, i);
-                //        if (t != 0)
-                //        {
-                //            amountOf_cache++;
-                //            FlagsArrayTextBox.Text += $" 1 |";
-                //        }
-                //        else
-                //        {
-                //            FlagsArrayTextBox.Text += $" 0 |";
-                //        }
-                //    }
-
-                //    for (int i = 0; i < amountOf_cache; i++)
-                //    {
-                //        int value = data[8 + i * 2];
-                //        value = value << 8;
-                //        value += data[7 + i * 2];
-                //        DeskDataBoxes[i].Text = string.Empty;
-                //        DeskDataBoxes[i].Text = value.ToString();
-                //    }
-
-                //    if (sendSettings != 0)
-                //    {
-                //        SettingsNum1TextBox.Text = data[7 + amountOf_cache * 2].ToString();
-                //        SettingsNumTextBox.Text =
-                //            $"{data[8 + amountOf_cache * 2]} | {data[9 + amountOf_cache * 2]} | {data[10 + amountOf_cache * 2]} | {data[11 + amountOf_cache * 2]} | {data[12 + amountOf_cache * 2]} | {data[13 + amountOf_cache * 2]} |";
-                //    }
-
-                //    //DeskSettings.Add(SettingsNum1TextBox.Text, SettingsNumTextBox.Text);
-                //    var text = string.Empty;
-                //    foreach (var value in data)
-                //    {
-                //        text += $"{value} ";
-                //    }
-
-                //    using (var streamWriter = new StreamWriter(@"D:\data.txt", true))
-                //    {
-                //        streamWriter.WriteLine(text);
-                //    }
-                //}
-                //else
-                //{
-                //    RtuDirectionTextBox.Text = "1";
-                //    int settingsGroup = data[4] & 128;
-                //    RtuStatusTextBox.Text = string.Empty;
-                //    for (int i = 6; i >= 4; i--)
-                //    {
-                //        var value = data[4] & (int)Math.Pow(2, i);
-                //        RtuStatusTextBox.Text += value != 0 ? $"1 | " : $"0 | ";
-                //    }
-
-                //    RtuFuncAdressTextBox.Text = string.Empty;
-                //    for (int i = 3; i >= 0; i--)
-                //    {
-                //        var value = data[4] & (int)Math.Pow(2, i);
-                //        RtuStatusTextBox.Text += value != 0 ? $"1 | " : $"0 | ";
-                //    }
-
-                //    RtuFlagsArrayTextBox.Text = string.Empty;
-                //    int amountOf_cache = 0;
-
-                //    for (int i = 0; i < 8; i++)
-                //    {
-                //        var t = data[5] & (int)Math.Pow(2, i);
-                //        if (t != 0)
-                //        {
-                //            amountOf_cache++;
-                //            FlagsArrayTextBox.Text += $" 1 |";
-                //        }
-                //        else
-                //        {
-                //            FlagsArrayTextBox.Text += $" 0 |";
-                //        }
-                //    }
-
-                //    for (int i = 0; i < amountOf_cache; i++)
-                //    {
-                //        int value = data[7 + i * 2];
-                //        value = value << 8;
-                //        value += data[6 + i * 2];
-                //        RtuDataBoxes[i].Text = value.ToString();
-                //    }
-
-                //    if (settingsGroup != 0)
-                //    {
-                //        RtuSettingsNum1TextBox.Text = data[6 + amountOf_cache * 2].ToString();
-                //        RtuSettingsNumTextBox.Text =
-                //            $"{data[7 + amountOf_cache * 2]} | {data[8 + amountOf_cache * 2]} | {data[9 + amountOf_cache * 2]} | {data[10 + amountOf_cache * 2]} | {data[11 + amountOf_cache * 2]} | {data[12 + amountOf_cache * 2]} |";
-                //    }
-                //    RtuSettings.Add(RtuSettingsNum1TextBox.Text, RtuSettingsNumTextBox.Text);
-                //}
+                _plotWindow.SetVisibility(DeskDataCheckBoxes[i].IsChecked ?? false, DataFor.Desk, i);
             }
 
-            private void ClosePortButton_Click(object sender, RoutedEventArgs e)
+            for (int i = 0; i < 8; i++)
             {
-                _readThread = new Thread(ClosePort);
-                _readThread.Start();
+                _plotWindow.SetVisibility(RtuDataCheckBoxes[i].IsChecked ?? false, DataFor.Rtu, i);
             }
+        }
 
-            private void OpenPlotButton_Click(object sender, RoutedEventArgs e)
+        private void ClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            DirectionTextBox.Clear();
+            AskTextBox.Clear();
+            SettingsRequestTextBox.Clear();
+            PacketTypeTextBox.Clear();
+            FlagsArrayTextBox.Clear();
+            SettingsNumTextBox.Clear();
+            SettingsNum1TextBox.Clear();
+            foreach (var textbox in DeskDataBoxes)
             {
-                _plotWindow = new PlotWindow();
-                _plotWindow.Show();
-                for (int i = 0; i < 16; i++)
-                {
-                    _plotWindow.SetVisibility(DeskDataCheckBoxes[i].IsChecked ?? false, DataFor.Desk, i);
-                }
-
-                for (int i = 0; i < 8; i++)
-                {
-                    _plotWindow.SetVisibility(RtuDataCheckBoxes[i].IsChecked ?? false, DataFor.Rtu, i);
-                }
+                textbox.Clear();
             }
-
-            private void ClearButton_Click(object sender, RoutedEventArgs e)
+            foreach (var checkbox in DeskDataCheckBoxes)
             {
-                DirectionTextBox.Clear();
-                AskTextBox.Clear();
-                SettingsRequestTextBox.Clear();
-                PacketTypeTextBox.Clear();
-                FlagsArrayTextBox.Clear();
-                SettingsNumTextBox.Clear();
-                SettingsNum1TextBox.Clear();
-                foreach (var textbox in DeskDataBoxes)
-                {
-                    textbox.Clear();
-                }
-                foreach (var checkbox in DeskDataCheckBoxes)
-                {
-                    checkbox.IsChecked = false;
-                }
+                checkbox.IsChecked = false;
             }
+        }
 
-            private void RtuClearButton_Click(object sender, RoutedEventArgs e)
+        private void RtuClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            RtuDirectionTextBox.Clear();
+            RtuStatusTextBox.Clear();
+            RtuFuncAddressTextBox.Clear();
+            RtuFlagsArrayTextBox.Clear();
+            RtuSettingsNumTextBox.Clear();
+            RtuSettingsNum1TextBox.Clear();
+            foreach (var textbox in RtuDataBoxes)
             {
-                RtuDirectionTextBox.Clear();
-                RtuStatusTextBox.Clear();
-                RtuFuncAddressTextBox.Clear();
-                RtuFlagsArrayTextBox.Clear();
-                RtuSettingsNumTextBox.Clear();
-                RtuSettingsNum1TextBox.Clear();
-                foreach (var textbox in RtuDataBoxes)
-                {
-                    textbox.Clear();
-                }
-                foreach (var checkbox in RtuDataCheckBoxes)
-                {
-                    checkbox.IsChecked = false;
-                }
+                textbox.Clear();
             }
-
-            private void CheckBoxChanged(object sender, RoutedEventArgs e)
+            foreach (var checkbox in RtuDataCheckBoxes)
             {
-                var checkbox = sender as CheckBox;
-                var tag = checkbox.Tag;
-                var words = tag.ToString().Split(' ');
-                _plotWindow?.SetVisibility(checkbox.IsChecked ?? false, words[0] == "Desk" ? DataFor.Desk : DataFor.Rtu, int.Parse(words[1]));
+                checkbox.IsChecked = false;
             }
+        }
 
-            private void LoadSettings()
+        private void CheckBoxChanged(object sender, RoutedEventArgs e)
+        {
+            var checkbox = sender as CheckBox;
+            var tag = checkbox.Tag;
+            var words = tag.ToString().Split(' ');
+            _plotWindow?.SetVisibility(checkbox.IsChecked ?? false, words[0] == "Desk" ? DataFor.Desk : DataFor.Rtu, int.Parse(words[1]));
+        }
+
+        private void LoadSettings()
+        {
+            PortChooserBox.SelectedItem = Properties.Settings.Default.PortName;
+            BaudRateChooserBox.SelectedItem = Properties.Settings.Default.BaudRate;
+            ParityChooserBox.SelectedItem = Properties.Settings.Default.Parity;
+            StopBitsChooserBox.SelectedItem = Properties.Settings.Default.StopBits;
+            DataBitsChooserBox.SelectedItem = Properties.Settings.Default.ByteSize;
+        }
+
+        private void SaveSettings()
+        {
+            Properties.Settings.Default.PortName = PortChooserBox.SelectedItem as string;
+            Properties.Settings.Default.BaudRate = (int)BaudRateChooserBox.SelectedItem;
+            Properties.Settings.Default.Parity = (System.IO.Ports.Parity)ParityChooserBox.SelectedItem;
+            Properties.Settings.Default.StopBits = (System.IO.Ports.StopBits)StopBitsChooserBox.SelectedItem;
+            Properties.Settings.Default.ByteSize = (int)DataBitsChooserBox.SelectedItem;
+            Properties.Settings.Default.Save();
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            ClosePort();
+            SaveSettings();
+        }
+
+        private void ClosePort()
+        {
+            if (_port != null && _port.IsOpen)
             {
-                PortChooserBox.SelectedItem = Properties.Settings.Default.PortName;
-                BaudRateChooserBox.SelectedItem = Properties.Settings.Default.BaudRate;
-                ParityChooserBox.SelectedItem = Properties.Settings.Default.Parity;
-                StopBitsChooserBox.SelectedItem = Properties.Settings.Default.StopBits;
-                DataBitsChooserBox.SelectedItem = Properties.Settings.Default.ByteSize;
+                _port.Close();
             }
+        }
 
-            private void SaveSettings()
+        private void ShowSettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            (sender as Button).IsEnabled = false;
+            var window = new SettingsWindow();
+            window.SetData(DeskSettings);
+            window.Closed += SettingsWindowOnClosed;
+            window.Tag = "Desk";
+            window.Show();
+        }
+
+        private void RtuShowSettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            (sender as Button).IsEnabled = false;
+            var window = new SettingsWindow();
+            window.SetData(RtuSettings);
+            window.Closed += SettingsWindowOnClosed;
+            window.Tag = "Rtu";
+            window.Show();
+        }
+
+        private void SettingsWindowOnClosed(object sender, EventArgs eventArgs)
+        {
+            if ((string)(sender as SettingsWindow).Tag == "Desk")
             {
-                Properties.Settings.Default.PortName = PortChooserBox.SelectedItem as string;
-                Properties.Settings.Default.BaudRate = (int)BaudRateChooserBox.SelectedItem;
-                Properties.Settings.Default.Parity = (System.IO.Ports.Parity) ParityChooserBox.SelectedItem;
-                Properties.Settings.Default.StopBits = (System.IO.Ports.StopBits) StopBitsChooserBox.SelectedItem;
-                Properties.Settings.Default.ByteSize = (int)DataBitsChooserBox.SelectedItem;
-                Properties.Settings.Default.Save();
+                ShowSettingsButton.IsEnabled = true;
             }
-
-            private void Window_Closing(object sender, CancelEventArgs e)
+            else
             {
-                ClosePort();
-                SaveSettings();
-            }
-
-            private void ClosePort()
-            {
-                if (_port != null && _port.IsOpen)
-                {
-                    _port.Close();
-                }
-            }
-
-            private void ShowSettingsButton_Click(object sender, RoutedEventArgs e)
-            {
-                (sender as Button).IsEnabled = false;
-                var window = new SettingsWindow();
-                window.SetData(DeskSettings);
-                window.Closed += SettingsWindowOnClosed;
-                window.Tag = "Desk";
-                window.Show();
-            }
-
-            private void RtuShowSettingsButton_Click(object sender, RoutedEventArgs e)
-            {
-                (sender as Button).IsEnabled = false;
-                var window = new SettingsWindow();
-                window.SetData(RtuSettings);
-                window.Closed += SettingsWindowOnClosed;
-                window.Tag = "Rtu";
-                window.Show();
-            }
-
-            private void SettingsWindowOnClosed(object sender, EventArgs eventArgs)
-            {
-                if ((string)(sender as SettingsWindow).Tag == "Desk")
-                {
-                    ShowSettingsButton.IsEnabled = true;
-                }
-                else
-                {
-                    RtuShowSettingsButton.IsEnabled = true;
-                }
+                RtuShowSettingsButton.IsEnabled = true;
             }
         }
     }
+}

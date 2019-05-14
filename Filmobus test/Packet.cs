@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Filmobus_test
 {
@@ -23,6 +24,7 @@ namespace Filmobus_test
         public string RtuFuncAddress { get; private set; }
         public int[] RtuArray { get; private set; }
         
+        public string Data { get; private set; }
 
         private Packet(byte[] arr)
         {
@@ -163,8 +165,8 @@ namespace Filmobus_test
                     Settings2  =
                         $"{_data[7 + amountOf_cache * 2]} | {_data[8 + amountOf_cache * 2]} | {_data[9 + amountOf_cache * 2]} | {_data[10 + amountOf_cache * 2]} | {_data[11 + amountOf_cache * 2]} | {_data[12 + amountOf_cache * 2]} |";
                 }
-               // RtuSettings.Add(RtuSettingsNum1TextBox.Text, RtuSettingsNumTextBox.Text);
             }
+            Data = string.Join(" ", _data.ToArray());
         }
     }
 }

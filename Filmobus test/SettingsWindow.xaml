@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Filmobus_test"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="720" Width="1080" Loaded="SettingsWindow_OnLoaded">
+        Title="SettingsWindow" Height="720" Width="1080">
     <Grid x:Name="DataGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
