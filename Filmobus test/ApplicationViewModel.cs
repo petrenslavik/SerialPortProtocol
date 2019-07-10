@@ -1,6 +1,8 @@
 ﻿using Filmobus_test.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO.Ports;
 using System.Linq;
@@ -12,14 +14,44 @@ namespace Filmobus_test
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ApplicationViewModel()
+        public ApplicationViewModel(List<ObservableCollection<int>> deskSettingsValues, List<ObservableCollection<int>> rtuSettingsValues)
         {
+            _deskSettingsValues = deskSettingsValues;
+            _rtuSettingsValues = rtuSettingsValues;
             _port = new SerialPort();
             _port.DataReceived += ReadTempData;
             _cache = new List<byte>();
-            DeskSettings = new Dictionary<string, string>();
-            RtuSettings = new Dictionary<string, string>();
+            DeskDataCheckBoxes = new ObservableCollection<bool>(new bool[16]);
+            RtuDataCheckBoxes = new ObservableCollection<bool>(new bool[8]);
+            DeskDataCheckBoxes.CollectionChanged += DeskDataCheckBoxes_CollectionChanged;
+            RtuDataCheckBoxes.CollectionChanged += RtuDataCheckBoxes_CollectionChanged;
             LoadSettings();
+        }
+
+        private void RtuDataCheckBoxes_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (_plotWindow == null)
+            {
+                return;
+            }
+
+            if (e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                _plotWindow.SetVisibility(DeskDataCheckBoxes[e.OldStartingIndex], DataFor.Rtu, e.OldStartingIndex);
+            }
+        }
+
+        private void DeskDataCheckBoxes_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (_plotWindow == null)
+            {
+                return;
+            }
+
+            if (e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                _plotWindow.SetVisibility(DeskDataCheckBoxes[e.OldStartingIndex], DataFor.Desk, e.OldStartingIndex);
+            }
         }
 
         private Packet _deskPacket;
@@ -29,9 +61,9 @@ namespace Filmobus_test
         private SerialPort _port;
         private List<byte> _cache;
         private bool _isCleared;
-        private Dictionary<string, string> DeskSettings;
-        private Dictionary<string, string> RtuSettings;
         private PlotWindow _plotWindow;
+        private List<ObservableCollection<int>> _deskSettingsValues;
+        private List<ObservableCollection<int>> _rtuSettingsValues;
 
         public Packet LastPacket { get; private set; }
 
@@ -74,17 +106,24 @@ namespace Filmobus_test
         public int DataBits { get; set; }
         public StopBits StopBits { get; set; }
 
+        public ObservableCollection<bool> DeskDataCheckBoxes { get; set; }
+        public ObservableCollection<bool> RtuDataCheckBoxes { get; set; }
+
         private RelayCommand _closePortCommand;
         public RelayCommand ClosePortCommand => _closePortCommand ?? (_closePortCommand = new RelayCommand(ClosePort));
 
         private RelayCommand _openPortCommand;
         public RelayCommand OpenPortCommand => _openPortCommand ?? (_openPortCommand = new RelayCommand(OpenPort));
 
+        private RelayCommand _openPlotCommand;
+        public RelayCommand OpenPlotCommand => _openPlotCommand ?? (_openPlotCommand = new RelayCommand(OpenPlot));
+
         private void ClosePort(object obj)
         {
             if (_port != null && _port.IsOpen)
             {
                 _port.Close();
+                SerialPortException = string.Empty;
             }
         }
 
@@ -93,6 +132,7 @@ namespace Filmobus_test
             if (_port.IsOpen)
             {
                 SerialPortException = $"Port {_port.PortName} already opened";
+                return;
             }
 
             _port.Parity = Parity;
@@ -100,7 +140,8 @@ namespace Filmobus_test
             _port.BaudRate = BaudRate;
             _port.DataBits = DataBits;
             _port.StopBits = StopBits;
-            _port.ReceivedBytesThreshold = 256;
+            _port.ReceivedBytesThreshold = 64;
+            SerialPortException = string.Empty;
 
             try
             {
@@ -125,12 +166,23 @@ namespace Filmobus_test
             CheckPackets();
         }
 
-        public void CheckPackets()
+        private void CheckPackets()
         {
             if (_isCleared)
             {
                 while (true)
                 {
+                    while (true)
+                    {
+                        if (_cache.Count>0 && _cache[0] == 0)
+                        {
+                            _cache.RemoveAt(0);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
                     var packet = Packet.TryToCreate(_cache);
                     if (packet == null)
                     {
@@ -146,13 +198,9 @@ namespace Filmobus_test
                             _plotWindow?.AddPoint(DataFor.Desk, index, val);
                         }
 
-                        if (DeskSettings.ContainsKey(packet.Settings.ToString()))
+                        for (int i = 0; i < 6; i++)
                         {
-                            DeskSettings[packet.Settings.ToString()] = packet.Settings2;
-                        }
-                        else
-                        {
-                            DeskSettings.Add(packet.Settings.ToString(), packet.Settings2);
+                            _deskSettingsValues[packet.SettingsGroup][i] = packet.Settings[i];
                         }
                     }
                     else
@@ -164,13 +212,9 @@ namespace Filmobus_test
                             _plotWindow?.AddPoint(DataFor.Rtu, index, val);
                         }
 
-                        if (RtuSettings.ContainsKey(packet.Settings.ToString()))
+                        for (int i = 0; i < 6; i++)
                         {
-                            RtuSettings[packet.Settings.ToString()] = packet.Settings2;
-                        }
-                        else
-                        {
-                            RtuSettings.Add(packet.Settings.ToString(), packet.Settings2);
+                            _rtuSettingsValues[packet.SettingsGroup][i] = packet.Settings[i];
                         }
                     }
                 }
@@ -214,17 +258,17 @@ namespace Filmobus_test
 
         private void OpenPlot(object sender)
         {
-            //_plotWindow = new PlotWindow();
-            //_plotWindow.Show();
-            //for (int i = 0; i < 16; i++)
-            //{
-            //    _plotWindow.SetVisibility(DeskDataCheckBoxes[i].IsChecked ?? false, DataFor.Desk, i);
-            //}
+            _plotWindow = new PlotWindow();
+            _plotWindow.Show();
+            for (int i = 0; i < 16; i++)
+            {
+                _plotWindow.SetVisibility(DeskDataCheckBoxes[i], DataFor.Desk, i);
+            }
 
-            //for (int i = 0; i < 8; i++)
-            //{
-            //    _plotWindow.SetVisibility(RtuDataCheckBoxes[i].IsChecked ?? false, DataFor.Rtu, i);
-            //}
+            for (int i = 0; i < 8; i++)
+            {
+                _plotWindow.SetVisibility(RtuDataCheckBoxes[i], DataFor.Rtu, i);
+            }
         }
 
         [NotifyPropertyChangedInvocator]

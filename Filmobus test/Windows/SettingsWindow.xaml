@@ -15,5 +15,475 @@
             <MenuItem Header="Save settings" Click="SaveSettings_Click" ></MenuItem>
             <MenuItem Header="Load settings" Click="LoadSettings_Click"></MenuItem>
         </Menu>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Border BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Label Content="Desk Settings" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <Border Grid.Row="1" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[0][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[0][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[0][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[0][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[0][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[0][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="2" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[1][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[1][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[1][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[1][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[1][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[1][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="3" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[2][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[2][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[2][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[2][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[2][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[2][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="4" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[3][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[3][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[3][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[3][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[3][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[3][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="5" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[4][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[4][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[4][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[4][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[4][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[4][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="6" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[5][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[5][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[5][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[5][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[5][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[5][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="7" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[6][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[6][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[6][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[6][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[6][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[6][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="8" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[7][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[7][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[7][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[7][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[7][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[7][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="9" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[8][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[8][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[8][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[8][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[8][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[8][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="10" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[9][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[9][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[9][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[9][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[9][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[9][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="11" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[10][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[10][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[10][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[10][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[10][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[10][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="12" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[11][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[11][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[11][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[11][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[11][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[11][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="13" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[12][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[12][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[12][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[12][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[12][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[12][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="14" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[13][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[13][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[13][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[13][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[13][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[13][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="15" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[14][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[14][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[14][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[14][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[14][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[14][5]}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="16" BorderBrush="Gainsboro" BorderThickness="0,0,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[15][0]}"/>
+                        <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[15][1]}"/>
+                        <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[15][2]}"/>
+                        <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[15][3]}"/>
+                        <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[15][4]}"/>
+                        <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=DeskSettingsValues[15][5]}"/>
+                    </Grid>
+                </Border>
+            </Grid>
+            <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
+            <Grid Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Content="RTU Settings" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[0][0]}"/>
+                    <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[0][1]}"/>
+                    <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[0][2]}"/>
+                    <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[0][3]}"/>
+                    <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[0][4]}"/>
+                    <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[0][5]}"/>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[1][0]}"/>
+                    <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[1][1]}"/>
+                    <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[1][2]}"/>
+                    <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[1][3]}"/>
+                    <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[1][4]}"/>
+                    <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[1][5]}"/>
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[2][0]}"/>
+                    <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[2][1]}"/>
+                    <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[2][2]}"/>
+                    <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[2][3]}"/>
+                    <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[2][4]}"/>
+                    <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[2][5]}"/>
+                </Grid>
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[3][0]}"/>
+                    <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[3][1]}"/>
+                    <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[3][2]}"/>
+                    <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[3][3]}"/>
+                    <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[3][4]}"/>
+                    <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[3][5]}"/>
+                </Grid>
+                <Grid Grid.Row="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[4][0]}"/>
+                    <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[4][1]}"/>
+                    <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[4][2]}"/>
+                    <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[4][3]}"/>
+                    <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[4][4]}"/>
+                    <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[4][5]}"/>
+                </Grid>
+                <Grid Grid.Row="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[5][0]}"/>
+                    <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[5][1]}"/>
+                    <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[5][2]}"/>
+                    <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[5][3]}"/>
+                    <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[5][4]}"/>
+                    <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[5][5]}"/>
+                </Grid>
+                <Grid Grid.Row="7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[6][0]}"/>
+                    <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[6][1]}"/>
+                    <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[6][2]}"/>
+                    <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[6][3]}"/>
+                    <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[6][4]}"/>
+                    <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[6][5]}"/>
+                </Grid>
+                <Grid Grid.Row="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[7][0]}"/>
+                    <TextBox Grid.Column="1" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[7][1]}"/>
+                    <TextBox Grid.Column="2" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[7][2]}"/>
+                    <TextBox Grid.Column="3" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[7][3]}"/>
+                    <TextBox Grid.Column="4" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[7][4]}"/>
+                    <TextBox Grid.Column="5" Width="50" Height="20" Text="{Binding Path=RtuSettingsValues[7][5]}"/>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

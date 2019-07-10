@@ -17,13 +17,13 @@ namespace Filmobus_test
         public string SettingsRequest => SendSettings + " | " + AskSettings;
         public int[] DeskArray { get; private set; }
 
-        public int Settings { get; private set; }
-        public string Settings2 { get; private set; }
+        public int SettingsGroup { get; private set; }
+        public int[] Settings { get; private set; }
 
         public string RtuStatus { get; private set; }
         public string RtuFuncAddress { get; private set; }
         public int[] RtuArray { get; private set; }
-        
+
         public string Data { get; private set; }
 
         private Packet(byte[] arr)
@@ -37,7 +37,7 @@ namespace Filmobus_test
             byte length;
             if (data.Count > 4)
             {
-                length = (byte) (data[3]&127);
+                length = (byte)(data[3] & 127);
             }
             else
             {
@@ -62,8 +62,8 @@ namespace Filmobus_test
             {
                 Ask = (byte)(_data[4] / 128);
 
-                SendSettings = (byte)(_data[4] & 64);
-                AskSettings = (byte)(_data[4] & 32);
+                SendSettings = (byte)((_data[4] >> 6) & 1);
+                AskSettings = (byte)((_data[4] >> 5) & 1);
                 for (int i = 3; i >= 0; i--)
                 {
                     var value = _data[4] & (int)Math.Pow(2, i);
@@ -112,8 +112,12 @@ namespace Filmobus_test
 
                 if (SendSettings != 0)
                 {
-                    Settings = _data[7 + amountOfCache * 2];
-                    Settings2 = $"{_data[8 + amountOfCache * 2]} | {_data[9 + amountOfCache * 2]} | {_data[10 + amountOfCache * 2]} | {_data[11 + amountOfCache * 2]} | {_data[12 + amountOfCache * 2]} | {_data[13 + amountOfCache * 2]} |";
+                    SettingsGroup = _data[7 + amountOfCache * 2];
+                    Settings = new int[6];
+                    for (int i = 0; i < 6; i++)
+                    {
+                        Settings[i] = _data[8 + amountOfCache * 2 + i];
+                    }
                 }
             }
             else
@@ -161,9 +165,12 @@ namespace Filmobus_test
 
                 if (settingsGroup != 0)
                 {
-                    Settings = _data[6 + amountOf_cache * 2];
-                    Settings2  =
-                        $"{_data[7 + amountOf_cache * 2]} | {_data[8 + amountOf_cache * 2]} | {_data[9 + amountOf_cache * 2]} | {_data[10 + amountOf_cache * 2]} | {_data[11 + amountOf_cache * 2]} | {_data[12 + amountOf_cache * 2]} |";
+                    SettingsGroup = _data[6 + amountOf_cache * 2];
+                    Settings = new int[6];
+                    for (int i = 0; i < 6; i++)
+                    {
+                        Settings[i] = _data[7 + amountOf_cache * 2 + i];
+                    }
                 }
             }
             Data = string.Join(" ", _data.ToArray());

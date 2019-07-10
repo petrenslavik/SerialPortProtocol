@@ -2,8 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Filmobus_test"
+             xmlns:conv ="clr-namespace:Filmobus_test.Converters"
              StartupUri="Windows/MainWindow.xaml">
     <Application.Resources>
-         
+         <conv:NumberFormatConverter x:Key="NumberToHexadecimalConverter"/>
     </Application.Resources>
 </Application>

@@ -1,26 +1,28 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO.Ports;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using Filmobus_test.Converters;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using VerticalAlignment = System.Windows.VerticalAlignment;
 
 namespace Filmobus_test
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public List<TextBox> DeskDataBoxes;
         public List<TextBox> RtuDataBoxes;
         public List<CheckBox> DeskDataCheckBoxes;
         public List<CheckBox> RtuDataCheckBoxes;
+
+        private List<ObservableCollection<int>> _deskSettings;
+        private List<ObservableCollection<int>> _rtuSettings;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -32,6 +34,11 @@ namespace Filmobus_test
             RtuDataBoxes = new List<TextBox>();
             DeskDataCheckBoxes = new List<CheckBox>();
             RtuDataCheckBoxes = new List<CheckBox>();
+            _deskSettings = new List<ObservableCollection<int>>();
+            _rtuSettings = new List<ObservableCollection<int>>();
+
+            var converter = new NumberFormatConverter();
+
             for (int i = 0; i < 16; i++)
             {
                 var checkbox = new CheckBox()
@@ -41,9 +48,10 @@ namespace Filmobus_test
                     Margin = new Thickness(i * 36 + 12.5, 6, 0, 0)
                 };
 
-                checkbox.Checked += CheckBoxChanged;
-                checkbox.Unchecked += CheckBoxChanged;
                 checkbox.Tag = $"Desk {i}";
+
+                var bindingCheckBox = new Binding { Path = new PropertyPath($"DeskDataCheckBoxes[{i}]") };
+                checkbox.SetBinding(CheckBox.IsCheckedProperty, bindingCheckBox);
 
                 var textbox = new TextBox
                 {
@@ -55,7 +63,11 @@ namespace Filmobus_test
 
                 textbox.Tag = $"Desk {i}";
 
-                var binding = new Binding { Path = new PropertyPath($"CurrentDeskPacket.DeskArray[{i}]") };
+                var binding = new MultiBinding { Converter = converter };
+                var bindingViewModel = new Binding { Path = new PropertyPath($"CurrentDeskPacket.DeskArray[{i}]") };
+                var bindingIsHexadecimal = new Binding { Path = new PropertyPath($"IsChecked"), ElementName = "IsHexadecimalCheckBox" };
+                binding.Bindings.Add(bindingViewModel);
+                binding.Bindings.Add(bindingIsHexadecimal);
                 textbox.SetBinding(TextBox.TextProperty, binding);
 
                 checkbox.SetValue(Grid.ColumnSpanProperty, 4);
@@ -66,6 +78,8 @@ namespace Filmobus_test
                 textbox.SetValue(Grid.ColumnProperty, 1);
                 textbox.SetValue(Grid.RowProperty, 3);
                 textbox.SetValue(Grid.ZIndexProperty, 16 - i);
+
+                _deskSettings.Add(new ObservableCollection<int>(new int[6]));
 
                 DeskDataCheckBoxes.Add(checkbox);
                 DeskDataBoxes.Add(textbox);
@@ -89,15 +103,22 @@ namespace Filmobus_test
                     Width = 40,
                     Margin = new Thickness(i * 37, 0, 0, 0)
                 };
-                checkbox.Checked += CheckBoxChanged;
-                checkbox.Unchecked += CheckBoxChanged;
                 checkbox.Tag = $"Rtu {i}";
+
+                var bindingCheckBox = new Binding { Path = new PropertyPath($"RtuDataCheckBoxes[{i}]") };
+                checkbox.SetBinding(CheckBox.IsCheckedProperty, bindingCheckBox);
+
 
                 textbox.Tag = $"Rtu {i}";
 
-                var binding = new Binding { Path = new PropertyPath($"CurrentRtuPacket.RtuArray[{i}]") };
+                var binding = new MultiBinding {Converter = converter};
+                var bindingViewModel = new Binding { Path = new PropertyPath($"CurrentRtuPacket.RtuArray[{i}]") };
+                var bindingIsHexadecimal = new Binding { Path = new PropertyPath($"IsChecked"),ElementName = "IsHexadecimalCheckBox" };
+                binding.Bindings.Add(bindingViewModel);
+                binding.Bindings.Add(bindingIsHexadecimal);
                 textbox.SetBinding(TextBox.TextProperty, binding);
 
+                _rtuSettings.Add(new ObservableCollection<int>(new int[6]));
 
                 checkbox.SetValue(Grid.ColumnSpanProperty, 4);
                 checkbox.SetValue(Grid.ColumnProperty, 1);
@@ -138,7 +159,7 @@ namespace Filmobus_test
             StopBitsChooserBox.ItemsSource =
                 new List<StopBits>() { StopBits.One, StopBits.OnePointFive, StopBits.Two };
             DataBitsChooserBox.ItemsSource = new List<int> { 5, 6, 7, 8 };
-            DataContext = new ApplicationViewModel();
+            DataContext = new ApplicationViewModel(_deskSettings,_rtuSettings);
         }
 
         private void ClearButton_Click(object sender, RoutedEventArgs e)
@@ -178,14 +199,6 @@ namespace Filmobus_test
             }
         }
 
-        private void CheckBoxChanged(object sender, RoutedEventArgs e)
-        {
-            var checkbox = sender as CheckBox;
-            var tag = checkbox.Tag;
-            var words = tag.ToString().Split(' ');
-            //_plotWindow?.SetVisibility(checkbox.IsChecked ?? false, words[0] == "Desk" ? DataFor.Desk : DataFor.Rtu, int.Parse(words[1]));
-        }
-
         private void SaveSettings()
         {
             Properties.Settings.Default.PortName = PortChooserBox.SelectedItem as string;
@@ -201,25 +214,19 @@ namespace Filmobus_test
             SaveSettings();
         }
 
-        //private void ShowSettingsButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    (sender as Button).IsEnabled = false;
-        //    var window = new SettingsWindow();
-        //    window.SetData(DeskSettings);
-        //    window.Closed += SettingsWindowOnClosed;
-        //    window.Tag = "Desk";
-        //    window.Show();
-        //}
+        private void ShowSettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new SettingsWindow(new SettingsViewModel(_deskSettings, _rtuSettings));
+            window.Closed += SettingsWindowOnClosed;
+            window.Show();
+        }
 
-        //private void RtuShowSettingsButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    (sender as Button).IsEnabled = false;
-        //    var window = new SettingsWindow();
-        //    window.SetData(RtuSettings);
-        //    window.Closed += SettingsWindowOnClosed;
-        //    window.Tag = "Rtu";
-        //    window.Show();
-        //}
+        private void RtuShowSettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new SettingsWindow(new SettingsViewModel(_deskSettings, _rtuSettings));
+            window.Closed += SettingsWindowOnClosed;
+            window.Show();
+        }
 
         private void SettingsWindowOnClosed(object sender, EventArgs eventArgs)
         {

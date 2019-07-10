@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace Filmobus_test
 {
@@ -12,51 +13,11 @@ namespace Filmobus_test
     public partial class SettingsWindow : Window
     {
         private Dictionary<string, string> _settings;
-        private List<TextBox> _settingsGroupTextBoxes;
-        private List<TextBox> _settingsTextBoxes;
 
-        public SettingsWindow()
+        public SettingsWindow(SettingsViewModel model)
         {
             InitializeComponent();
-            _settingsGroupTextBoxes = new List<TextBox>();
-            _settingsTextBoxes = new List<TextBox>();
-        }
-
-        public void SetData(Dictionary<string, string> settings)
-        {
-            _settings = settings;
-            int count = 0;
-            foreach (var pair in settings)
-            {
-                var groupTextBox = new TextBox
-                {
-                    Text = pair.Key,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    Margin = new Thickness(10, count * 23 + 10, 0, 0),
-                    Width = 100,
-                    Height = 23
-                };
-
-                var dataTextBox = new TextBox
-                {
-                    Text = pair.Value,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    Margin = new Thickness(100 + 10 + 10, count * 23 + 10, 0, 0),
-                    Width = 280,
-                    Height = 23
-                };
-
-                groupTextBox.SetValue(Grid.RowProperty, 1);
-                dataTextBox.SetValue(Grid.RowProperty, 1);
-
-                _settingsGroupTextBoxes.Add(groupTextBox);
-                _settingsTextBoxes.Add(dataTextBox);
-                DataGrid.Children.Add(groupTextBox);
-                DataGrid.Children.Add(dataTextBox);
-                count++;
-            }
+            DataContext = model;
         }
 
         private void SaveSettings_Click(object sender, RoutedEventArgs e)

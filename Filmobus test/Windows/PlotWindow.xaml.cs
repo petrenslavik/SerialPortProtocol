@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Windows;
+using System.Windows.Media;
 using Microsoft.Win32;
 using OxyPlot;
+using OxyPlot.Annotations;
+using OxyPlot.Axes;
 using OxyPlot.Series;
 
 namespace Filmobus_test
@@ -60,6 +64,21 @@ namespace Filmobus_test
                 _dataPlot.Series.Add(series);
                 _rtuSeries.Add(series);
             }
+
+            var horizontalAxis = new LinearAxis();
+            horizontalAxis.MajorGridlineStyle = LineStyle.Solid;
+            horizontalAxis.MinorGridlineStyle = LineStyle.Solid;
+            horizontalAxis.MajorGridlineColor = OxyColors.Black;
+            horizontalAxis.Position = AxisPosition.Bottom;
+
+            var verticalAxis = new LinearAxis();
+            verticalAxis.MajorGridlineStyle = LineStyle.Solid;
+            verticalAxis.MinorGridlineStyle = LineStyle.Solid;
+            verticalAxis.MajorGridlineColor = OxyColors.Black;
+            verticalAxis.Position = AxisPosition.Left;
+
+            _dataPlot.Axes.Add(horizontalAxis);
+            _dataPlot.Axes.Add(verticalAxis);
 
             var timerCallback = new TimerCallback(RefreshGraphics);
             _timer = new Timer(timerCallback, null, 0, 1000);
