@@ -1,11 +1,10 @@
-﻿using Microsoft.Win32;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
+using Filmobus_test.ViewModels;
+using Microsoft.Win32;
 
-namespace Filmobus_test
+namespace Filmobus_test.Windows
 {
     /// <summary>
     /// Interaction logic for SettingsWindow.xaml

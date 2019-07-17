@@ -153,17 +153,37 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ApplicationViewModel.cs" />
+    <Compile Include="Models\IMode.cs" />
+    <Compile Include="Models\InformationField.cs" />
+    <Compile Include="Models\Level.cs" />
+    <Compile Include="Models\Sin.cs" />
+    <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="Converters\IntArrayToStringConverter.cs" />
     <Compile Include="Converters\NumberFormatConverter.cs" />
-    <Compile Include="Packet.cs" />
+    <Compile Include="Models\Packet.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="RelayCommand.cs" />
-    <Compile Include="SerializableData.cs" />
-    <Compile Include="SettingsViewModel.cs" />
+    <Compile Include="HelpfulClasses\RelayCommand.cs" />
+    <Compile Include="HelpfulClasses\SerializableData.cs" />
+    <Compile Include="ViewModels\PortViewModel.cs" />
+    <Compile Include="ViewModels\SenderViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="Views\PortView.xaml.cs">
+      <DependentUpon>PortView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SenderView.xaml.cs">
+      <DependentUpon>SenderView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\PortView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SenderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -227,6 +247,7 @@
   <ItemGroup>
     <Resource Include="Resources\Icons\serial-port.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -8,6 +8,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Filmobus_test.Converters;
+using Filmobus_test.ViewModels;
+using Filmobus_test.Windows;
+using OxyPlot;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using VerticalAlignment = System.Windows.VerticalAlignment;
 
@@ -134,35 +137,12 @@ namespace Filmobus_test
                 RtuDataGrid.Children.Add(textbox);
             }
 
-            PortChooserBox.ItemsSource = SerialPort.GetPortNames().ToList();
-            BaudRateChooserBox.ItemsSource = new List<int>()
-            {
-                110,
-                300,
-                600,
-                2100,
-                2400,
-                4800,
-                9600,
-                14400,
-                19200,
-                38400,
-                56000,
-                57600,
-                115200,
-                230400,
-                460800,
-                921600
-            };
-            ParityChooserBox.ItemsSource =
-                new List<Parity>() { Parity.None, Parity.Even, Parity.Mark, Parity.Odd, Parity.Space };
-            StopBitsChooserBox.ItemsSource =
-                new List<StopBits>() { StopBits.One, StopBits.OnePointFive, StopBits.Two };
-            DataBitsChooserBox.ItemsSource = new List<int> { 5, 6, 7, 8 };
-            DataContext = new ApplicationViewModel(_deskSettings,_rtuSettings);
+            var model = new ApplicationViewModel(_deskSettings, _rtuSettings);
+            DataContext = model;
+            Closing += model.Closing;
         }
 
-        private void ClearButton_Click(object sender, RoutedEventArgs e)
+        private void Clear(object sender, RoutedEventArgs e)
         {
             DirectionTextBox.Clear();
             AskTextBox.Clear();
@@ -179,10 +159,6 @@ namespace Filmobus_test
             {
                 checkbox.IsChecked = false;
             }
-        }
-
-        private void RtuClearButton_Click(object sender, RoutedEventArgs e)
-        {
             RtuDirectionTextBox.Clear();
             RtuStatusTextBox.Clear();
             RtuFuncAddressTextBox.Clear();
@@ -199,29 +175,7 @@ namespace Filmobus_test
             }
         }
 
-        private void SaveSettings()
-        {
-            Properties.Settings.Default.PortName = PortChooserBox.SelectedItem as string;
-            Properties.Settings.Default.BaudRate = (int)BaudRateChooserBox.SelectedItem;
-            Properties.Settings.Default.Parity = (System.IO.Ports.Parity)ParityChooserBox.SelectedItem;
-            Properties.Settings.Default.StopBits = (System.IO.Ports.StopBits)StopBitsChooserBox.SelectedItem;
-            Properties.Settings.Default.ByteSize = (int)DataBitsChooserBox.SelectedItem;
-            Properties.Settings.Default.Save();
-        }
-
-        private void Window_Closing(object sender, CancelEventArgs e)
-        {
-            SaveSettings();
-        }
-
         private void ShowSettingsButton_Click(object sender, RoutedEventArgs e)
-        {
-            var window = new SettingsWindow(new SettingsViewModel(_deskSettings, _rtuSettings));
-            window.Closed += SettingsWindowOnClosed;
-            window.Show();
-        }
-
-        private void RtuShowSettingsButton_Click(object sender, RoutedEventArgs e)
         {
             var window = new SettingsWindow(new SettingsViewModel(_deskSettings, _rtuSettings));
             window.Closed += SettingsWindowOnClosed;
@@ -233,10 +187,6 @@ namespace Filmobus_test
             if ((string)(sender as SettingsWindow).Tag == "Desk")
             {
                 ShowSettingsButton.IsEnabled = true;
-            }
-            else
-            {
-                RtuShowSettingsButton.IsEnabled = true;
             }
         }
     }
