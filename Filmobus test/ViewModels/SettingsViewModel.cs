@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Filmobus_test.Annotations;
+using Filmobus_test.Properties;
 
 namespace Filmobus_test.ViewModels
 {

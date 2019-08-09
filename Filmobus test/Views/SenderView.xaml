@@ -3,22 +3,43 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Filmobus_test.Views"
+             xmlns:views="clr-namespace:Filmobus_test.Views"
+             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+             xmlns:models="clr-namespace:Filmobus_test.Models"
+             xmlns:converters="clr-namespace:Filmobus_test.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <DataTemplate DataType="{x:Type local:EmployeeViewModel}">
-            <local:EmployeeView/>
+        <converters:TextToIntArrayConverter x:Key="IntArrToTextConverter"/>
+        <DataTemplate DataType="{x:Type models:Level}">
+                <TextBox Width="150" Text="{Binding Value}"/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type local:DepartmentViewModel}">
-            <local:DepartmentView/>
+        <DataTemplate DataType="{x:Type models:Sin}">
+            <StackPanel Orientation="Horizontal">
+                <Label>Frequency(Hz):</Label>
+                <TextBox Width="150" Text="{Binding Frequency}"/>
+            </StackPanel>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type local:MenuViewModel}">
-            <local:MenuView/>
+        <DataTemplate DataType="{x:Type models:Triangle}">
+            <StackPanel Orientation="Horizontal">
+                <Label>Min:</Label>
+                <TextBox Width="150" Text="{Binding Minimum}"/>
+                <Label>Max:</Label>
+                <TextBox Width="150" Text="{Binding Maximum}"/>
+                <Label>Duration(s) :</Label>
+                <TextBox Width="150" Text="{Binding Duration}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type models:RealTimeManual}">
+            <StackPanel Orientation="Horizontal">
+                <Slider x:Name="slider" Orientation="Horizontal" Minimum="0" Maximum="65535" Width="250" TickPlacement="TopLeft" TickFrequency="2200" Value="{Binding Value}"/>
+                <TextBlock Text="{Binding ElementName=slider, Path=Value,Mode=OneWay,StringFormat='Actual value: {0}'}"/>
+            </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -31,33 +52,46 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Label x:Name="TimeoutLabel" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">Timeout:</Label>
-        <TextBox x:Name="TimeoutTextBox" Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="100"/>
+        <Label x:Name="TimeoutLabel" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">Timeout(ms):</Label>
+        <TextBox x:Name="TimeoutTextBox" Text="{Binding Timeout}" Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="23" TextWrapping="Wrap" Width="100"/>
         <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
             <Label x:Name="SendAskLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 10 0">Ask:</Label>
-            <CheckBox x:Name="SendAskCheckBox" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <CheckBox x:Name="SendAskCheckBox" IsChecked="{Binding Ask}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
             <Label x:Name="SendSettings" Margin="0 0 10 0" HorizontalAlignment="Center" VerticalAlignment="Center">Send Settings:</Label>
-            <CheckBox x:Name="SendSettingsCheckBox" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <CheckBox x:Name="SendSettingsCheckBox" IsChecked="{Binding SendSettings}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </StackPanel>
         <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal">
             <Label x:Name="AskSettings" Margin="0 0 10 0" HorizontalAlignment="Center" VerticalAlignment="Center">Ask Settings:</Label>
-            <CheckBox x:Name="AskSettingsCheckBox" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <CheckBox x:Name="AskSettingsCheckBox" IsChecked="{Binding AskSettings}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </StackPanel>
         <StackPanel Grid.Column="3" Grid.Row="1" Orientation="Horizontal">
             <Label x:Name="TypeModule" Margin="0 0 10 0" HorizontalAlignment="Center" VerticalAlignment="Center">Type Module:</Label>
-            <TextBox x:Name="TypeModuleTextBox" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Height="23" MaxLength="4" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="TypeModuleTextBox" Text="{Binding TypeModule}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Height="23" MaxLength="4" VerticalContentAlignment="Center"/>
         </StackPanel>
         <Label x:Name="Flags" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">Flags</Label>
-        <TextBox x:Name="FlagsTextBox" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" MaxLength="16"/>
-        <Label Grid.Row="3" Grid.Column="0">1 Field mode:</Label>
-        <ComboBox x:Name="FieldTextBox" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200">
-            <TextBlock>Level</TextBlock>
-            <TextBlock>Sin</TextBlock>
-            <TextBlock>Triangle</TextBlock>
-            <TextBlock>Real Time Manual</TextBlock>
-        </ComboBox>
-
+        <TextBox x:Name="FlagsTextBox" Text="{Binding Flags, Converter={StaticResource IntArrToTextConverter}}" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" MaxLength="16"/>
+        <ItemsControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{Binding Fields}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Label>Field mode:</Label>
+                        <ComboBox ItemsSource="{Binding Modes}" SelectedItem="{Binding SelectedMode}" Width="200"></ComboBox>
+                        <ContentControl Content="{Binding SelectedViewModel}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <StackPanel Grid.Column="0" Grid.Row="4" Orientation="Horizontal" Grid.ColumnSpan="2">
+            <Label x:Name="SettingsGroupNum" Margin="0 0 10 0" HorizontalAlignment="Center" VerticalAlignment="Center">Settings group num:</Label>
+            <TextBox x:Name="SettingsGroupNumTextBox" Text="{Binding SettingsGroupNum}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Height="23" MaxLength="4" VerticalContentAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Grid.Column="2" Grid.Row="4" Orientation="Horizontal" Grid.ColumnSpan="2">
+            <Label x:Name="SettingsGroup" Margin="0 0 10 0" HorizontalAlignment="Center" VerticalAlignment="Center">Settings groups:</Label>
+            <TextBox x:Name="SettingsGroupTextBox" Text="{Binding SettingsGroup, Converter={StaticResource IntArrToTextConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Height="23" VerticalContentAlignment="Center"/>
+        </StackPanel>
+        <Button Grid.Row="5" Grid.Column="0" Command="{Binding StartSendingCommand}">Start</Button>
+        <TextBox x:Name="CurrentPacket" Text="{Binding LastPacket}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Margin="10 0 10 0"></TextBox>
     </Grid>
 </UserControl>

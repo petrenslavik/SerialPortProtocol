@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Filmobus_test
+namespace Filmobus_test.Models
 {
     public class Packet
     {
@@ -30,6 +30,14 @@ namespace Filmobus_test
         {
             _data = arr;
             Analyze();
+        }
+
+        private Packet()
+        {
+            _data = new byte[0];
+            DeskArray = new int[16];
+            Settings = new int[8];
+            RtuArray = new int[8];
         }
 
         public static Packet TryToCreate(List<byte> data)
@@ -175,5 +183,7 @@ namespace Filmobus_test
             }
             Data = string.Join(" ", _data.ToArray());
         }
+
+        public static Packet Empty => new Packet();
     }
 }

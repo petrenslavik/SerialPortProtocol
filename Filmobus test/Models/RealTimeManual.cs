@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Filmobus_test.Models
 {
-    public class Level:IMode
+    public class RealTimeManual:IMode
     {
         public int Value { get; set; }
-        public bool IsDynamic => false;
+        public bool IsDynamic => true;
         public int GetValue(double time)
         {
             return Value;

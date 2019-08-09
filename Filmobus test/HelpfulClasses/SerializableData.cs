@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Filmobus_test.Windows;
 using OxyPlot;
 using OxyPlot.Series;
+using System;
+using System.Collections.Generic;
 
-namespace Filmobus_test
+namespace Filmobus_test.HelpfulClasses
 {
     [Serializable]
     public class SerializableData
@@ -58,7 +59,7 @@ namespace Filmobus_test
 
     public static class CRC
     {
-        static readonly ushort[] crc16Table = {
+        private static readonly ushort[] crc16Table = {
          0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50A5, 0x60C6, 0x70E7,
     0x8108, 0x9129, 0xA14A, 0xB16B, 0xC18C, 0xD1AD, 0xE1CE, 0xF1EF,
     0x1231, 0x0210, 0x3273, 0x2252, 0x52B5, 0x4294, 0x72F7, 0x62D6,
@@ -93,11 +94,14 @@ namespace Filmobus_test
     0x6E17, 0x7E36, 0x4E55, 0x5E74, 0x2E93, 0x3EB2, 0x0ED1, 0x1EF0
         };
 
-        public static ushort CRC16(byte[] bytes, int len)
+        public static ushort CRC16(byte[] bytes, int len, int offset)
         {
             ushort crc = 0x0000;
-            for (var i = 0; i < len; i++)
-                crc = (ushort)((crc << 8) ^ crc16Table[(crc >> 8) ^ bytes[i]]);
+            for (var i = offset; i < len; i++)
+            {
+                crc = (ushort)((crc << 8) ^ crc16Table[(crc >> 8) ^ (0xff & bytes[i])]);
+            }
+
             return crc;
         }
     }

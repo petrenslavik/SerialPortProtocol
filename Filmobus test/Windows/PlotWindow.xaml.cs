@@ -1,17 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Windows;
-using System.Windows.Media;
+using Filmobus_test.HelpfulClasses;
 using Microsoft.Win32;
 using OxyPlot;
-using OxyPlot.Annotations;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 
-namespace Filmobus_test
+namespace Filmobus_test.Windows
 {
     public enum DataFor { Desk, Rtu }
     /// <summary>

@@ -1,8 +1,10 @@
-﻿namespace Filmobus_test.Models
+﻿using System;
+
+namespace Filmobus_test.Models
 {
     public interface IMode
     {
-        int Value { get; set; }
-        
+        bool IsDynamic { get; }
+        int GetValue(double time);
     }
 }
