@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Filmobus_test.Properties;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Filmobus_test.Properties;
 
 namespace Filmobus_test.Models
 {
@@ -31,6 +32,8 @@ namespace Filmobus_test.Models
                     case Mode.RealTimeManual:
                         SelectedViewModel = new RealTimeManual();
                         break;
+                    default:
+                        throw new InvalidOperationException($"Unexpected value _mode = {_mode}");
                 }
                 OnPropertyChanged();
                 OnPropertyChanged("SelectedViewModel");

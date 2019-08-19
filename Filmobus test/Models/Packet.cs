@@ -6,7 +6,8 @@ namespace Filmobus_test.Models
 {
     public class Packet
     {
-        public byte[] _data;
+        private byte[] _data;
+
         public byte Length { get; private set; }
         public byte Direction { get; private set; }
         public byte Ask { get; private set; }

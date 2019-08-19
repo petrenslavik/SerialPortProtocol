@@ -59,6 +59,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\TextToIntArrayConverter.cs" />
+    <Compile Include="HelpfulClasses\CRC16.cs" />
     <Compile Include="Models\IMode.cs" />
     <Compile Include="Models\InformationField.cs" />
     <Compile Include="Models\Level.cs" />

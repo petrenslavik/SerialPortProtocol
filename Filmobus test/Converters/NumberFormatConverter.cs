@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Text;
 using System.Windows.Data;
 
 namespace Filmobus_test.Converters
@@ -23,25 +24,25 @@ namespace Filmobus_test.Converters
             if (values[0] is int[])
             {
                 var arr = (int[]) values[0];
-                var str = string.Empty;
+                var sb = new StringBuilder(16);
                 for (int i = 0; i < arr.Length; i++)
                 {
                     if (isHex)
                     {
-                        str += arr[i].ToString("X");
+                        sb.AppendFormat("{0:X}",arr[i]);
                     }
                     else
                     {
-                        str += arr[i].ToString();
+                        sb.Append(arr[i]);
                     }
 
                     if (i - 1 != arr.Length)
                     {
-                        str += " | ";
+                        sb.Append(" | ");
                     }
                 }
 
-                return str;
+                return sb.ToString();
             }
 
             return null;

@@ -18,13 +18,13 @@ namespace Filmobus_test.Converters
             if (targetType == typeof(string))
             {
                 var arr = value as int[];
-                var str = string.Empty;
+                var sb = new StringBuilder(32);
                 for (int i = 0; i < arr.Length; i++)
                 {
-                    str += arr[i].ToString();
+                    sb.Append(arr[i]);
                 }
 
-                return str;
+                return sb.ToString();
             }
 
             if (targetType == typeof(int[]))
@@ -49,13 +49,13 @@ namespace Filmobus_test.Converters
             if (targetType == typeof(string))
             {
                 var arr = value as int[];
-                var str = string.Empty;
+                var sb = new StringBuilder(32);
                 for (int i = 0; i < arr.Length; i++)
                 {
-                    str += arr[i].ToString();
+                    sb.Append(arr[i]);
                 }
 
-                return str;
+                return sb.ToString();
             }
 
             if (targetType == typeof(int[]))

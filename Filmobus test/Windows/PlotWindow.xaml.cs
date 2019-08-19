@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading;
-using System.Windows;
-using Filmobus_test.HelpfulClasses;
+﻿using Filmobus_test.HelpfulClasses;
 using Microsoft.Win32;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
+using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
+using System.Windows;
 
 namespace Filmobus_test.Windows
 {
@@ -109,9 +109,15 @@ namespace Filmobus_test.Windows
             }
 
             double lastX = 0;
-            if(points.Count!=0)
-                lastX = points[points.Count - 1].X;
-            points.Add(new DataPoint(lastX + 1, value));
+            if (points != null)
+            {
+                if (points.Count != 0)
+                {
+                    lastX = points[points.Count - 1].X;
+                }
+
+                points.Add(new DataPoint(lastX + 1, value));
+            }
         }
 
         public void SetVisibility(bool visibility, DataFor type, int number)

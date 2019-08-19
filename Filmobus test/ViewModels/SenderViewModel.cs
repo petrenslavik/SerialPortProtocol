@@ -105,7 +105,9 @@ namespace Filmobus_test.ViewModels
 
             length += 6;//Start Flag, Length, CRC
             _data = new byte[length];
-            _data[0] = _data[1] = _data[2] = 255;
+            _data[0] = 255;
+            _data[1] = 255;
+            _data[2] = 255;
             _data[3] = (byte)(length - 4);
             // _data[3] = (byte)(length | 128);//RTU
             byte id = (byte)Convert.ToInt32(TypeModule, 2);
@@ -157,7 +159,7 @@ namespace Filmobus_test.ViewModels
                 }
             }
 
-            var crc = CRC.CRC16(_data, _data.Length - 2,3);
+            var crc = CRC.Crc16(_data, _data.Length - 2,3);
             _data[_data.Length - 2] = (byte)(crc >> 8);
             _data[_data.Length - 1] = (byte)crc;
         }
